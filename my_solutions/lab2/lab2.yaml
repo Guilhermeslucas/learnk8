@@ -1,0 +1,38 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: mysql2
+  labels:
+    name: mysql2
+spec:
+  containers:
+  - name: mysql2
+    image: mysql
+    ports:
+      - containerPort: 3306
+    env: 
+    - name: "MYSQL_ROOT_PASSWORD"
+      valueFrom:
+        secretKeyRef:
+          name: mysql-pass
+          key: password
+    - name: "MYSQL_USER"
+      value: "mysql"
+    - name: "MYSQL_PASSWORD"
+      value: "mysql"
+    - name: "MYSQL_DATABASE"
+      value: "sample"
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: mysql-service2
+spec:
+  type: LoadBalancer
+  selector:
+    app: mysql2
+  ports:
+  - port: 3306
+    targetPort: 3306
+ 
